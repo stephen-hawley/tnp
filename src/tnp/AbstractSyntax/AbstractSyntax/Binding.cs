@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace TNPSupport.AbstractSyntax
 {
 	public class Binding
@@ -11,6 +12,9 @@ namespace TNPSupport.AbstractSyntax
 
 		public string Name { get; set; }
 		public TNPType Type { get; set; }
+
+		static IList<Binding> emptyReadOnly = new List<Binding> ().AsReadOnly ();
+		public static IList<Binding> EmptyReadOnly => emptyReadOnly;
 	}
 }
 
