@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace TNPSupport.AbstractSyntax
 {
 	public class TNPTypeFactory
@@ -31,6 +33,48 @@ namespace TNPSupport.AbstractSyntax
 				return newType;
 			}
 		}
+
+		public static TNPType FromTypeName (string nameSpace, string typeName)
+		{
+			var ty = new TNPType (nameSpace, typeName);
+			lock (cache) {
+				cache.Add ($"{nameSpace}.{typeName}", ty);
+				return ty;
+			}
+		}
+
+		public static bool TryRemove (string fullName, out TNPType? ty)
+		{
+			lock (cachelock) {
+				if (cache.TryGetValue (fullName, out ty)) {
+					cache.Remove (fullName);
+					return true;
+				}
+				ty = null;
+				return false;
+			}
+		}
+
+		public static bool TryRemove (TNPType ty)
+		{
+			lock (cachelock) {
+				var fullName = ty.FullName;
+				if (cache.ContainsKey (fullName)) {
+					cache.Remove (fullName);
+					return true;
+				}
+				return false;
+			}
+		}
+
+		public bool TryGet (string fullName, [NotNullWhen (returnValue: true)] out TNPType? ty)
+		{
+			lock (cachelock) {
+				return cache.TryGetValue (fullName, out ty);
+			}
+		}
+
+		public static TNPType Void => cache.GetValueOrDefault ("System.Void")!;
 	}
 }
 
