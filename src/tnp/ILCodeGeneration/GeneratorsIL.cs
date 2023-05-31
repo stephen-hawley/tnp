@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using TNPSupport.AbstractSyntax;
 using TNPSupport.CodeGeneration;
 
@@ -16,7 +17,7 @@ namespace ILCodeGeneration
 
 		public string Name => "IL";
 
-		public bool TryGetGenerator(IASTNode node, out ICodeGenerator? generator)
+		public bool TryGetGenerator(IASTNode node, [NotNullWhen (returnValue: true)] out ICodeGenerator? generator)
 		{
 			foreach (var gen in generators) {
 				if (gen.Matches (node)) {

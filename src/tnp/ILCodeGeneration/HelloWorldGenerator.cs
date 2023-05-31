@@ -29,7 +29,7 @@ namespace ILCodeGeneration
 			MakeCtorBody (assembly, typeSystem, cl, ctor);
 			var main = MakeMain (typeSystem);
 			cl.Methods.Add (main);
-			MakeMainBody (assembly, typeSystem, cl, ctor);
+			MakeMainBody (assembly, typeSystem, cl, main);
 			assembly.EntryPoint = main;
 		}
 
@@ -62,12 +62,17 @@ namespace ILCodeGeneration
 		void MakeMainBody (AssemblyDefinition assembly, TypeSystem typeSystem, TypeDefinition cl, MethodDefinition m)
 		{
 			var il = m.Body.GetILProcessor ();
+			il.Emit (OpCodes.Ldstr, "hello, world.");
+			var writeLine = typeof (System.Console).ResolveMethod ("WriteLine",
+				System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public,
+				"System.String");
+			il.Emit (OpCodes.Call, assembly.MainModule.ImportReference (writeLine));
 			il.Emit (OpCodes.Ret);
 		}
 
 		TypeDefinition MakeClass (TypeSystem typeSystem)
 		{
-			var cl = new TypeDefinition ("DefaultNamespace", "DecaultClass",
+			var cl = new TypeDefinition ("DefaultNamespace", "DefaultClass",
 				TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Public
 				| TypeAttributes.Sealed, typeSystem.Object);
 			return cl;
