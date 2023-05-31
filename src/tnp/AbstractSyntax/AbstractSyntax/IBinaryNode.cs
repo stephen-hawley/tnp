@@ -1,7 +1,7 @@
 ﻿using System;
 namespace TNPSupport.AbstractSyntax
 {
-	public interface IBinaryNode : IASTNode
+	public interface IBinaryNode : IASTNode, IExprNode
 	{
 		IASTNode Left { get; set; }
 		IASTNode Right { get; set; }
@@ -31,6 +31,13 @@ namespace TNPSupport.AbstractSyntax
 			}
 		}
 
+		public bool IsConstant {
+			get {
+				return Left is IExprNode lex && lex.IsConstant &&
+					Right is IExprNode rex && rex.IsConstant;
+			}
+		}
+		
 		public void ReplaceChild (IASTNode oldNode, IASTNode newNode)
 		{
 			if (oldNode == Left) {

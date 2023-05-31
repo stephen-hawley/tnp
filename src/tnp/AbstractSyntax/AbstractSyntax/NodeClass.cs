@@ -9,7 +9,7 @@ namespace TNPSupport.AbstractSyntax
 		Block = 1 << 2,
 		Statement = 1 << 3,
 		Expression = 1 << 4,
-		StrongTyped = 1 << 5,
+		StrongTyped = 1 << 6,
 	}
 }
 

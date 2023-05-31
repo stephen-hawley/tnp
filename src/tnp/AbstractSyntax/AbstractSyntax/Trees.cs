@@ -1,8 +1,20 @@
 ﻿using System;
+using TNPSupport.Semantics;
+
 namespace TNPSupport.AbstractSyntax
 {
 	public class Trees
 	{
+		public static IEnumerable <IASTNode> AllNodes (IASTNode node)
+		{
+			yield return node;
+			foreach (var child in node.Children) {
+				foreach (var subchild in AllNodes (child)) {
+					yield return subchild;
+				}
+			}
+		}
+
 		public static bool WalkTree (IASTNode node, Func<IASTNode, bool> action)
 		{
 			if (!action (node))
@@ -71,7 +83,9 @@ namespace TNPSupport.AbstractSyntax
 			writer.Write (binding.Type.FullName);
 		}
 
-		public static SemanticResult CheckSemantics (ISemantics environment, IASTNode node, List<SemanticError> errors)
+		// todo: make this async and work get a list of semantics
+		// so we can make the rules implementation short
+		public static SemanticResult CheckSemantics (ISemanticCheckers environment, IASTNode node, List<SemanticError> errors)
 		{
 			if (environment.TryGetSemanticChecker (node, out var checker)) {
 				return checker.Check (environment, node, errors);

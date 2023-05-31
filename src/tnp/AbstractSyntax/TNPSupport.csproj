@@ -9,9 +9,11 @@
   <ItemGroup>
     <None Remove="AbstractSyntax\" />
     <None Remove="CodeGeneration\" />
+    <None Remove="Semantics\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractSyntax\" />
     <Folder Include="CodeGeneration\" />
+    <Folder Include="Semantics\" />
   </ItemGroup>
 </Project>

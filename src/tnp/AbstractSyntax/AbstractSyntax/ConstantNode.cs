@@ -2,7 +2,7 @@
 
 namespace TNPSupport.AbstractSyntax
 {
-	public class ConstantNode<T> : IASTNode {
+	public class ConstantNode<T> : IASTNode, IExprNode {
 		public ConstantNode (T value)
 		{
 			Value = value;
@@ -25,14 +25,18 @@ namespace TNPSupport.AbstractSyntax
 		{
 			throw new NotImplementedException();
 		}
+
+		public bool IsConstant => true;
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantString : ConstantNode<string>
 	{
 		public ConstantString (string value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantBool : ConstantNode<bool>
 	{
 		public ConstantBool (bool value)
@@ -43,41 +47,49 @@ namespace TNPSupport.AbstractSyntax
 		public static ConstantBool False => falseVal;
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantByte : ConstantNode<byte> {
 		public ConstantByte (byte value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantSByte : ConstantNode<sbyte> {
 		public ConstantSByte (sbyte value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantShort : ConstantNode<short> {
 		public ConstantShort (short value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantUShort : ConstantNode<ushort> {
 		public ConstantUShort (ushort value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantInt : ConstantNode<int> {
 		public ConstantInt (int value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantUInt : ConstantNode<uint> {
 		public ConstantUInt (uint value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantLong : ConstantNode<long> {
 		public ConstantLong (long value)
 			: base (value) { }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class ConstantULong : ConstantNode<ulong> {
 		public ConstantULong (ulong value)
 			: base (value) { }
