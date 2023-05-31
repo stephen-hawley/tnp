@@ -30,13 +30,16 @@ namespace ILCodeGeneration
 
 		public void Begin (string name, string outputDirectory)
 		{
-
+			Environment = new Environment (name, outputDirectory);
+			Environment.Begin ();
 		}
 
 		public void End ()
 		{
-
+			Environment.End ();
 		}
+
+		public Environment Environment { get; private set; } = new Environment ("", "");
 	}
 }
 
