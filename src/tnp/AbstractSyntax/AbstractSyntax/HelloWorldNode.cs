@@ -7,15 +7,23 @@ namespace TNPSupport.AbstractSyntax
 	{
 		public HelloWorldNode()
 		{
+			var strNode = new ConstantString ("Hello world!\n");
+			var printer = new PrintNode ();
+			printer.Value = strNode;
+			strNode.Parent = printer;
+			printer.Parent = this;
+			Printer = printer;
 		}
 
 		public IASTNode Parent { get; set; } = EmptyNode.Empty;
 
 		public string Name => "helloworld";
 
+		public PrintNode Printer { get; private set; }
+
 		public IEnumerable<IASTNode> Children {
 			get {
-				yield break;
+				yield return Printer;
 			}
 		}
 
@@ -25,7 +33,10 @@ namespace TNPSupport.AbstractSyntax
 
 		public void ReplaceChild(IASTNode oldChild, IASTNode newChild)
 		{
-			throw new NotImplementedException();
+			if (oldChild == Printer && newChild is PrintNode p) {
+				Printer = p;
+				p.Parent = this;
+			}
 		}
 	}
 }

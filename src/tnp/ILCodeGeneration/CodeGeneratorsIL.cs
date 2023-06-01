@@ -8,7 +8,9 @@ namespace ILCodeGeneration
 	public class CodeGeneratorsIL : ICodeGenerators
 	{
 		List<ICodeGenerator> generators = new List<ICodeGenerator> () {
-			new HelloWorldGenerator ()
+			new HelloWorldGenerator (),
+			new PrintGenerator (),
+			new ConstantStringGenerator ()
 		};
 
 		public CodeGeneratorsIL ()

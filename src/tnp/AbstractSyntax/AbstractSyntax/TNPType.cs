@@ -3,11 +3,12 @@ namespace TNPSupport.AbstractSyntax
 {
 	public class TNPType
 	{
-		public TNPType(string nameSpace, string name, string alias = "")
+		public TNPType(string nameSpace, string name, string alias = "", bool isValueType = false)
 		{
 			NameSpace = nameSpace;
 			Name = name;
 			Alias = alias;
+			IsValueType = isValueType;
 		}
 
 		public string NameSpace { get; set; }
@@ -16,6 +17,7 @@ namespace TNPSupport.AbstractSyntax
 		public bool HasAlias => !string.IsNullOrEmpty (Alias);
 		public string FullName => $"{NameSpace}.{Name}";
 		public override string ToString () => HasAlias ? Alias : FullName;
+		public bool IsValueType { get; set; }
 	}
 }
 

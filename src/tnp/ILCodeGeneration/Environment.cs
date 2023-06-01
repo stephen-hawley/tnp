@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
+using Mono.Cecil.Cil;
 
 namespace ILCodeGeneration
 {
@@ -49,6 +50,35 @@ namespace ILCodeGeneration
 			type = Assembly?.MainModule.Types.FirstOrDefault (t => t.FullName == fullName);
 			return type is not null;
 		}
+
+		[return: NotNull]
+		public AssemblyDefinition ThrowOnNoAssembly ()
+		{
+			if (Assembly is null)
+				throw new Exception ("No current assembly");
+			return Assembly;
+		}
+
+		public void ThrowOnNoMethod ()
+		{
+			if (CurrentILProcessors.Count <= 0 || CurrentMethods.Count <= 0)
+				throw new Exception ("no current method being compiled");
+		}
+
+		public void MethodBegin (MethodDefinition m)
+		{
+			CurrentMethods.Push (m);
+			CurrentILProcessors.Push (m.Body.GetILProcessor ());
+		}
+
+		public void MethodEnd ()
+		{
+			CurrentMethods.Pop ();
+			CurrentILProcessors.Pop ();
+		}
+
+		public Stack<ILProcessor> CurrentILProcessors { get; private set; } = new Stack<ILProcessor> ();
+		public Stack<MethodDefinition> CurrentMethods { get; private set; } = new Stack<MethodDefinition> ();
 	}
 }
 
