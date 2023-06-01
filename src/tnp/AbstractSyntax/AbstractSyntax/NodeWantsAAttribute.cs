@@ -5,9 +5,13 @@ namespace TNPSupport.AbstractSyntax
 	public class NodeWantsAAttribute : Attribute
 	{
 		public NodeClass NodeClass { get; private set; }
-		public NodeWantsAAttribute(NodeClass nodeClass)
+		// todo: make a standard type that is no type at all - not part of the
+		// type system
+		public string? OfType { get; private set; }
+		public NodeWantsAAttribute(NodeClass nodeClass, string? ofType = null)
 		{
 			NodeClass = nodeClass;
+			OfType = ofType;
 		}
 	}
 }

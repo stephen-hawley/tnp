@@ -17,22 +17,25 @@ namespace ILCodeGeneration
 
 		async Task Generate (CodeGeneratorsIL env, HelloWorldNode node)
 		{
-			await Task.Run (() => {
-				var assembly = env.Environment.Assembly;
-				if (assembly is null)
-					throw new Exception ("no assembly?!");
-				var typeSystem = assembly.MainModule.TypeSystem;
+			var assembly = env.Environment.Assembly;
+			if (assembly is null)
+				throw new Exception ("no assembly?!");
+			var typeSystem = assembly.MainModule.TypeSystem;
 
-				var cl = MakeClass (typeSystem);
-				env.Environment.AddType (cl);
-				var ctor = MakeCtor (typeSystem);
-				cl.Methods.Add (ctor);
-				MakeCtorBody (assembly, typeSystem, cl, ctor);
-				var main = MakeMain (typeSystem);
-				cl.Methods.Add (main);
-				MakeMainBody (assembly, typeSystem, cl, main);
-				assembly.EntryPoint = main;
-			});
+			var cl = MakeClass (typeSystem);
+			env.Environment.AddType (cl);
+			var ctor = MakeCtor (typeSystem);
+			cl.Methods.Add (ctor);
+			env.Environment.MethodBegin (ctor);
+			MakeCtorBody (env, typeSystem);
+			env.Environment.MethodEnd ();
+
+			var main = MakeMain (typeSystem);
+			cl.Methods.Add (main);
+			env.Environment.MethodBegin (main);
+			await MakeMainBody (env, node, typeSystem);
+			env.Environment.MethodEnd ();
+			assembly.EntryPoint = main;
 		}
 
 
@@ -43,9 +46,11 @@ namespace ILCodeGeneration
 			return ctor;
 		}
 
-		void MakeCtorBody (AssemblyDefinition assembly, TypeSystem typeSystem, TypeDefinition cl, MethodDefinition m)
+		void MakeCtorBody (CodeGeneratorsIL gen, TypeSystem typeSystem)
 		{
-			var il = m.Body.GetILProcessor ();
+			var il = gen.Environment.CurrentILProcessors.Peek ();
+			var cl = gen.Environment.CurrentMethods.Peek ().DeclaringType;
+			var assembly = gen.Environment.ThrowOnNoAssembly ();
 			if (cl.BaseType.DefaultCtor (out var baseCtor)) {
 				il.Emit (OpCodes.Ldarg_0);
 				il.Emit (OpCodes.Call, assembly.MainModule.ImportReference (baseCtor));
@@ -61,15 +66,12 @@ namespace ILCodeGeneration
 			return main;
 		}
 
-		void MakeMainBody (AssemblyDefinition assembly, TypeSystem typeSystem, TypeDefinition cl, MethodDefinition m)
+		async Task MakeMainBody (CodeGeneratorsIL gen, HelloWorldNode hw, TypeSystem typeSystem)
 		{
-			var il = m.Body.GetILProcessor ();
-			il.Emit (OpCodes.Ldstr, "hello, world.");
-			var writeLine = typeof (System.Console).ResolveMethod ("WriteLine",
-				System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public,
-				"System.String");
-			il.Emit (OpCodes.Call, assembly.MainModule.ImportReference (writeLine));
-			il.Emit (OpCodes.Ret);
+			if (gen.TryGetGenerator (hw.Printer, out var printGen)) {
+				await printGen.Generate (gen, hw.Printer);
+			}
+			gen.Environment.CurrentILProcessors.Peek ().Emit (OpCodes.Ret);
 		}
 
 		TypeDefinition MakeClass (TypeSystem typeSystem)
