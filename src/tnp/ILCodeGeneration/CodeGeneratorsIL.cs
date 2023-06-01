@@ -5,13 +5,13 @@ using TNPSupport.CodeGeneration;
 
 namespace ILCodeGeneration
 {
-	public class GeneratorsIL : IGenerators
+	public class CodeGeneratorsIL : ICodeGenerators
 	{
 		List<ICodeGenerator> generators = new List<ICodeGenerator> () {
 			new HelloWorldGenerator ()
 		};
 
-		public GeneratorsIL ()
+		public CodeGeneratorsIL ()
 		{
 		}
 

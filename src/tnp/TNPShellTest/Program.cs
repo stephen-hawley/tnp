@@ -6,7 +6,7 @@ using System.IO;
 var startTime = System.Environment.TickCount;
 var helloNode = new HelloWorldNode ();
 
-var generators = new GeneratorsIL ();
+var generators = new CodeGeneratorsIL ();
 
 var tempDirectory = Directory.CreateTempSubdirectory ();
 Directory.CreateDirectory (tempDirectory.FullName);
@@ -14,7 +14,7 @@ Directory.CreateDirectory (tempDirectory.FullName);
 generators.Begin ("testFunc", tempDirectory.FullName);
 
 if (generators.TryGetGenerator (helloNode, out var codeGenerator)) {
-	codeGenerator.Generate (generators, helloNode);
+	await codeGenerator.Generate (generators, helloNode);
 }
 
 generators.End ();

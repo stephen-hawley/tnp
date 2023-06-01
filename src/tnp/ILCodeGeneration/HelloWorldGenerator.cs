@@ -9,28 +9,30 @@ namespace ILCodeGeneration
 {
 	public class HelloWorldGenerator : ICodeGenerator
 	{
-		public void Generate(IGenerators environment, IASTNode node)
+		public async Task Generate(ICodeGenerators environment, IASTNode node)
 		{
-			if (environment is GeneratorsIL env && node is HelloWorldNode hello)
-				Generate (env, hello);
+			if (environment is CodeGeneratorsIL env && node is HelloWorldNode hello)
+				await Generate (env, hello);
 		}
 
-		void Generate (GeneratorsIL env, HelloWorldNode node)
+		async Task Generate (CodeGeneratorsIL env, HelloWorldNode node)
 		{
-			var assembly = env.Environment.Assembly;
-			if (assembly is null)
-				throw new Exception ("no assembly?!");
-			var typeSystem = assembly.MainModule.TypeSystem;
+			await Task.Run (() => {
+				var assembly = env.Environment.Assembly;
+				if (assembly is null)
+					throw new Exception ("no assembly?!");
+				var typeSystem = assembly.MainModule.TypeSystem;
 
-			var cl = MakeClass (typeSystem);
-			env.Environment.AddType (cl);
-			var ctor = MakeCtor (typeSystem);
-			cl.Methods.Add (ctor);
-			MakeCtorBody (assembly, typeSystem, cl, ctor);
-			var main = MakeMain (typeSystem);
-			cl.Methods.Add (main);
-			MakeMainBody (assembly, typeSystem, cl, main);
-			assembly.EntryPoint = main;
+				var cl = MakeClass (typeSystem);
+				env.Environment.AddType (cl);
+				var ctor = MakeCtor (typeSystem);
+				cl.Methods.Add (ctor);
+				MakeCtorBody (assembly, typeSystem, cl, ctor);
+				var main = MakeMain (typeSystem);
+				cl.Methods.Add (main);
+				MakeMainBody (assembly, typeSystem, cl, main);
+				assembly.EntryPoint = main;
+			});
 		}
 
 

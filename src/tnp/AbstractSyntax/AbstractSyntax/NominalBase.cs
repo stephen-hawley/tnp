@@ -9,14 +9,6 @@ namespace TNPSupport.AbstractSyntax
 		{
 		}
 
-		// TODO: these need to be stronly typed
-		public IList<IASTNode> Fields { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Properties { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Indexers { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Constructors { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Methods { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Operators { get; private set; } = new List<IASTNode> ();
-
 		public IASTNode Parent { get; set; } = EmptyNode.Empty;
 
 		public abstract string Name { get; }
@@ -25,59 +17,18 @@ namespace TNPSupport.AbstractSyntax
 		public string TypeName {
 			get => typeName;
 			set {
-				ChangeType (typeName); 
+				ChangeType (typeName);
 			}
 		}
 
 		public Visibility Visibility { get; set; }
 
-		public virtual IEnumerable<IASTNode> Children {
-			get {
-				foreach (var f in Fields)
-					yield return f;
-				foreach (var p in Properties)
-					yield return p;
-				foreach (var i in Indexers)
-					yield return i;
-				foreach (var c in Constructors)
-					yield return c;
-				foreach (var m in Methods)
-					yield return m;
-				foreach (var o in Operators)
-					yield return o;
-			}
-		}
-
+		public abstract IEnumerable<IASTNode> Children { get; }
 		public IList<Binding> Bindings => Binding.EmptyReadOnly;
 
 		public TNPType Type { get; set; } = TNPTypeFactory.Void;
 
-		public void ReplaceChild(IASTNode oldChild, IASTNode newChild)
-		{
-			if (ReplaceChildInSet (Fields, oldChild, newChild))
-				return;
-			if (ReplaceChildInSet (Properties, oldChild, newChild))
-				return;
-			if (ReplaceChildInSet (Indexers, oldChild, newChild))
-				return;
-			if (ReplaceChildInSet (Constructors, oldChild, newChild))
-				return;
-			if (ReplaceChildInSet (Methods, oldChild, newChild))
-				return;
-			if (ReplaceChildInSet (Operators, oldChild, newChild))
-				return;
-		}
-
-		bool ReplaceChildInSet (IList<IASTNode> l, IASTNode oldChild, IASTNode newChild)
-		{
-			for (var i = 0; i < l.Count; i++) {
-				if (l [i] == oldChild) {
-					l [i] = newChild;
-					return true;
-				}
-			}
-			return false;
-		}
+		public abstract void ReplaceChild (IASTNode oldChild, IASTNode newChild);
 
 		void ChangeType (string newName)
 		{
@@ -92,7 +43,7 @@ namespace TNPSupport.AbstractSyntax
 			typeName = newName;
 		}
 
-		string fullName = ""; 
+		string fullName = "";
 
 		public string FullName => fullName;
 
@@ -107,6 +58,7 @@ namespace TNPSupport.AbstractSyntax
 				return "";
 			}
 		}
+
 	}
 }
 

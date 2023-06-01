@@ -2,7 +2,7 @@
 namespace TNPSupport.AbstractSyntax
 {
 	[NodeIsA (NodeClass.Type)]
-	public class ClassNode : NominalBase {
+	public class ClassNode : InstanceBase {
 		public ClassNode ()
 		{
 		}

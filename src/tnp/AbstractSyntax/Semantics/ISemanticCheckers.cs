@@ -1,7 +1,9 @@
 ﻿using System;
-namespace TNPSupport.AbstractSyntax
+using TNPSupport.AbstractSyntax;
+
+namespace TNPSupport.Semantics
 {
-	public interface ISemantics
+	public interface ISemanticCheckers
 	{
 		public bool TryGetSemanticChecker (IASTNode node, out ISemanticChecker checker);
 	}
