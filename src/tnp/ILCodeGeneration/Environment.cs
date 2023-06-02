@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using Mono.Cecil.Cil;
+using TNPSupport.AbstractSyntax;
 
 namespace ILCodeGeneration
 {
@@ -69,16 +70,20 @@ namespace ILCodeGeneration
 		{
 			CurrentMethods.Push (m);
 			CurrentILProcessors.Push (m.Body.GetILProcessor ());
+			CurrentMethodReturn.Push (Instruction.Create (OpCodes.Ret));
 		}
 
 		public void MethodEnd ()
 		{
 			CurrentMethods.Pop ();
 			CurrentILProcessors.Pop ();
+			CurrentMethodReturn.Pop ();
 		}
 
 		public Stack<ILProcessor> CurrentILProcessors { get; private set; } = new Stack<ILProcessor> ();
 		public Stack<MethodDefinition> CurrentMethods { get; private set; } = new Stack<MethodDefinition> ();
+		public Stack<Instruction> CurrentMethodReturn { get; private set; } = new Stack<Instruction> ();
+
 	}
 }
 

@@ -27,6 +27,11 @@ namespace TNPSupport.AbstractSyntax
 		}
 
 		public bool IsConstant => true;
+
+		public override string ToString()
+		{
+			return $"{Type} {Value}";
+		}
 	}
 
 	[NodeIsA (NodeClass.Expression)]

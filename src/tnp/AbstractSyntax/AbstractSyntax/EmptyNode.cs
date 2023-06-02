@@ -28,6 +28,11 @@ namespace TNPSupport.AbstractSyntax
 		static EmptyNode emptyNode = new EmptyNode ();
 
 		public static EmptyNode Empty => emptyNode;
+
+		public override string ToString()
+		{
+			return "<[]>";
+		}
 	}
 }
 

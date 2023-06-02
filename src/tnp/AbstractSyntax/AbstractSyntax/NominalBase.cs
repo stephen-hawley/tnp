@@ -17,7 +17,7 @@ namespace TNPSupport.AbstractSyntax
 		public string TypeName {
 			get => typeName;
 			set {
-				ChangeType (typeName);
+				ChangeType (value);
 			}
 		}
 
@@ -33,21 +33,13 @@ namespace TNPSupport.AbstractSyntax
 		void ChangeType (string newName)
 		{
 			TNPTypeFactory.TryRemove (FullName, out var oldType);
-			var sb = new StringBuilder ();
-			sb.Append (Namespace);
-			if (sb.Length > 0)
-				sb.Append ('.');
-			sb.Append (newName);
-			fullName = sb.ToString ();
 			Type = TNPTypeFactory.FromTypeName (Namespace, newName);
 			typeName = newName;
 		}
 
-		string fullName = "";
+		public string FullName => $"{Namespace}.{typeName}";
 
-		public string FullName => fullName;
-
-		string Namespace {
+		public string Namespace {
 			get {
 				var parent = Parent;
 				while (parent != EmptyNode.Empty) {
@@ -59,6 +51,10 @@ namespace TNPSupport.AbstractSyntax
 			}
 		}
 
+		public override string ToString()
+		{
+			return FullName;
+		}
 	}
 }
 

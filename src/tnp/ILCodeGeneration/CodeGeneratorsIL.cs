@@ -10,7 +10,10 @@ namespace ILCodeGeneration
 		List<ICodeGenerator> generators = new List<ICodeGenerator> () {
 			new HelloWorldGenerator (),
 			new PrintGenerator (),
-			new ConstantStringGenerator ()
+			new ConstantStringGenerator (),
+			new ClassGenerator (),
+			new MethodGenerator (),
+			new TopLevelGenerator (),
 		};
 
 		public CodeGeneratorsIL ()
