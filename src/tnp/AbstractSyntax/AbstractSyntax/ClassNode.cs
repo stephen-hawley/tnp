@@ -10,7 +10,9 @@ namespace TNPSupport.AbstractSyntax
 		public override string Name => "class";
 
 		[NodeWantsA (NodeClass.Type)]
-		public ClassNode? Inheritance { get; set; } = null;
+		public TNPType Inheritance { get; set; } = TNPTypeFactory.Object;
+
+		public ClassVariety Variety { get; set; } = ClassVariety.Static;
 	}
 }
 

@@ -4,7 +4,31 @@ using TNPSupport.AbstractSyntax;
 using System.IO;
 
 var startTime = System.Environment.TickCount;
-var helloNode = new HelloWorldNode ();
+//var helloNode = new HelloWorldNode ();
+
+// all this is for making the root node
+var helloNode = new TopLevelNode () { NameSpace = "NoName" };
+var fooClass = new ClassNode () { TypeName = "Foo" };
+helloNode.TypeNodes.Add (fooClass);
+fooClass.Parent = helloNode;
+var ctor = new MethodNode () { MethodName = ".ctor" };
+fooClass.Methods.Add (ctor);
+ctor.Parent = fooClass;
+var main = new MethodNode () { MethodName = "Main" };
+fooClass.Methods.Add (main);
+main.Parent = fooClass;
+
+// this is the printer
+var strNode = new ConstantString ("Hello, world!");
+var printer = new PrintLineNode () { Value = strNode };
+strNode.Parent = printer;
+main.Statements.Add (printer);
+printer.Parent = main;
+
+var entry = helloNode.MethodsByName ("NoName.Foo", "Main").FirstOrDefault ();
+if (entry is not null)
+	helloNode.EntryPoint = entry;
+
 
 var generators = new CodeGeneratorsIL ();
 
@@ -26,6 +50,7 @@ task.Wait ();
 if (task.Result.ExitCode == 0) {
 	Console.WriteLine (task.Result.StandardOutput?.ToString () ?? "no output");
 	Console.WriteLine ($"Compilation time: {endTime - startTime}ms");
+	Trees.WriteTreeAsSExpr (helloNode);
 } else {
 	Console.WriteLine (task.Result.StandardError?.ToString () ?? "no error output");
 }

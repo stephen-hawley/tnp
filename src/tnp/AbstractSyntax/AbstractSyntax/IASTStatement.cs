@@ -1,11 +1,8 @@
 ﻿using System;
 namespace TNPSupport.AbstractSyntax
 {
-	public enum ClassVariety
+	public interface IASTStatement : IASTNode
 	{
-		None,
-		Static,
-		Abstract,
 	}
 }
 

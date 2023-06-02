@@ -14,7 +14,7 @@ namespace TNPSupport.AbstractSyntax
 		public IList<IASTNode> Properties { get; private set; } = new List<IASTNode> ();
 		public IList<IASTNode> Indexers { get; private set; } = new List<IASTNode> ();
 		public IList<IASTNode> Constructors { get; private set; } = new List<IASTNode> ();
-		public IList<IASTNode> Methods { get; private set; } = new List<IASTNode> ();
+		public IList<MethodNode> Methods { get; private set; } = new List<MethodNode> ();
 		public IList<IASTNode> Operators { get; private set; } = new List<IASTNode> ();
 
 		public override IEnumerable<IASTNode> Children {
@@ -50,11 +50,11 @@ namespace TNPSupport.AbstractSyntax
 				return;
 		}
 
-		bool ReplaceChildInSet (IList<IASTNode> l, IASTNode oldChild, IASTNode newChild)
+		bool ReplaceChildInSet <T> (IList<T> l, IASTNode oldChild, IASTNode newChild) where T:IASTNode
 		{
 			for (var i = 0; i < l.Count; i++) {
-				if (l [i] == oldChild) {
-					l [i] = newChild;
+				if ((IASTNode)l [i] == oldChild) {
+					l [i] = (T)newChild;
 					return true;
 				}
 			}

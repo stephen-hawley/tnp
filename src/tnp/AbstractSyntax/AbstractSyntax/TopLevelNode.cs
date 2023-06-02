@@ -31,6 +31,8 @@ namespace TNPSupport.AbstractSyntax
 				}
 			}
 		}
+
+		public MethodNode? EntryPoint { get; set; }
 	}
 }
 

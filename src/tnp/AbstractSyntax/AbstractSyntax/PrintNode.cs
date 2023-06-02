@@ -3,28 +3,17 @@
 namespace TNPSupport.AbstractSyntax
 {
 	[NodeIsA(NodeClass.Statement)]
-	public class PrintNode : IASTNode
+	public class PrintNode : PrintBase
 	{
-		public IASTNode Parent { get; set; } = EmptyNode.Empty;
-
-		public string Name => "Print";
-
-		public IEnumerable<IASTNode> Children => throw new NotImplementedException();
-
-		public IList<Binding> Bindings => throw new NotImplementedException();
-
-		public TNPType Type { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-		[NodeWantsA (NodeClass.StrongTyped, ofType: "System.String")]
-		public IASTNode Value { get; set; } = EmptyNode.Empty;
-
-		public void ReplaceChild(IASTNode oldChild, IASTNode newChild)
-		{
-			if (oldChild == Value) {
-				oldChild = newChild;
-				newChild.Parent = this;
-			}
-		}
+		public override string Name => "Print";
+		public override bool IncludeNewline => false;
 	}
+
+	[NodeIsA (NodeClass.Statement)]
+	public class PrintLineNode : PrintBase {
+		public override string Name => "PrintLine";
+		public override bool IncludeNewline => true;
+	}
+
 }
 
