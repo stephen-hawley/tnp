@@ -12,6 +12,20 @@ namespace TNPSupport.AbstractSyntax
 		{
 			return Trees.AllNodes (node).OfType<InstanceBase> ();
 		}
+
+		public static IEnumerable<MethodNode> MethodsInClass (this ClassNode cl, string methodName)
+		{
+			return cl.Methods.Where (m => m.MethodName == methodName);
+		}
+
+		public static IEnumerable<MethodNode> MethodsByName (this TopLevelNode tl, string fullClassName, string methodName)
+		{
+			var cl = tl.Classes ().Where (cl => cl.FullName == fullClassName).FirstOrDefault ();
+			if (cl is null) {
+				return Enumerable.Empty<MethodNode> ();
+			}
+			return cl.MethodsInClass (methodName);
+		}
 	}
 }
 

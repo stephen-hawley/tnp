@@ -18,6 +18,7 @@ namespace TNPSupport.AbstractSyntax
 			{ "System.UInt32", new TNPType ("System", "UInt32", "uint", true) },
 			{ "System.Int64", new TNPType ("System", "Int64", "long", true) },
 			{ "System.UInt64", new TNPType ("System", "UInt64", "ulong", true) },
+			{ "System.Object", new TNPType ("System", "Object", "object") },
 		};
 
 		public static TNPType FromType (Type t)
@@ -74,7 +75,11 @@ namespace TNPSupport.AbstractSyntax
 			}
 		}
 
-		public static TNPType Void => cache.GetValueOrDefault ("System.Void")!;
+		[NotNull]
+		public static TNPType Void => cache ["System.Void"];
+
+		[NotNull]
+		public static TNPType Object => cache ["System.Object"];
 	}
 }
 

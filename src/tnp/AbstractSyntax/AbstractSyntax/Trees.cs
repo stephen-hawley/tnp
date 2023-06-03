@@ -67,10 +67,14 @@ namespace TNPSupport.AbstractSyntax
 			writer.Write (node.GetType ().Name);
 			writer.Write (' ');
 			writer.Write (node.Name);
+			writer.Write (' ');
+			writer.Write (node.ToString ());
 			foreach (var binding in node.Bindings) {
+				writer.Write (' ');
 				WriteBinding (binding, writer);
 			}
 			foreach (var child in node.Children) {
+				writer.Write (' ');
 				WriteTreeAsSExpr (child, writer);
 			}
 			writer.Write (')');

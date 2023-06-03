@@ -7,8 +7,8 @@ namespace TNPSupport.AbstractSyntax
 	{
 		public HelloWorldNode()
 		{
-			var strNode = new ConstantString ("Hello world!\n");
-			var printer = new PrintNode ();
+			var strNode = new ConstantString ("Hello world!");
+			var printer = new PrintLineNode ();
 			printer.Value = strNode;
 			strNode.Parent = printer;
 			printer.Parent = this;
@@ -19,7 +19,7 @@ namespace TNPSupport.AbstractSyntax
 
 		public string Name => "helloworld";
 
-		public PrintNode Printer { get; private set; }
+		public PrintBase Printer { get; private set; }
 
 		public IEnumerable<IASTNode> Children {
 			get {
@@ -37,6 +37,11 @@ namespace TNPSupport.AbstractSyntax
 				Printer = p;
 				p.Parent = this;
 			}
+		}
+
+		public override string ToString()
+		{
+			return "HelloWorld";
 		}
 	}
 }

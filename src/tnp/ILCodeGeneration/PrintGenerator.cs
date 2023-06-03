@@ -11,11 +11,11 @@ namespace ILCodeGeneration
 	{
 		public async Task Generate (ICodeGenerators environment, IASTNode node)
 		{
-			if (environment is CodeGeneratorsIL gen && node is PrintNode print)
+			if (environment is CodeGeneratorsIL gen && node is PrintBase print)
 				await Generate (gen, print);
 		}
 
-		public async Task Generate (CodeGeneratorsIL gen, PrintNode print)
+		public async Task Generate (CodeGeneratorsIL gen, PrintBase print)
 		{
 			gen.Environment.ThrowOnNoMethod ();
 			await Task.Run (async () => {
@@ -31,7 +31,8 @@ namespace ILCodeGeneration
 				
 				var assembly = gen.Environment.ThrowOnNoAssembly ();
 				var il = gen.Environment.CurrentILProcessors.Peek ();
-				var writeLine = typeof (System.Console).ResolveMethod ("Write",
+				var callSite = print.IncludeNewline ? "WriteLine" : "Write";
+				var writeLine = typeof (System.Console).ResolveMethod (callSite,
 				System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public,
 					"System.String");
 				il.Emit (OpCodes.Call, assembly.MainModule.ImportReference (writeLine));
@@ -41,7 +42,7 @@ namespace ILCodeGeneration
 
 		public bool Matches(IASTNode node)
 		{
-			return node is PrintNode;
+			return node is PrintBase;
 		}
 	}
 }

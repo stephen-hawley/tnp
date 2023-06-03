@@ -6,7 +6,7 @@ namespace TNPSupport.AbstractSyntax
 		Public,
 		Protected,
 		Private,
-		Internal,
+//		Internal,
 	}
 }
 
