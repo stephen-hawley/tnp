@@ -22,7 +22,24 @@ public partial class MainPageViewModel : ObservableObject
 	[RelayCommand]
 	void AddNode()
 	{
-		nodes.Add(new Node() { Type = NodeType.HelloWorld });
+		nodes.Add(new Node(NodeType.HelloWorld));
+	}
+
+	[RelayCommand]
+	void AddClassNode(object sender)
+	{
+		if (sender is Node node)
+		{
+			var index = nodes.IndexOf(node);
+			nodes.Insert(index + 1, new Node(NodeType.Class));
+		}
+	}
+
+	[RelayCommand]
+	void RemoveNode(object sender)
+	{
+		if (sender is Node node)
+			nodes.Remove(node);
 	}
 
 	[RelayCommand]
@@ -34,6 +51,7 @@ public partial class MainPageViewModel : ObservableObject
 
 		await CompileNodes(tempDirectory);
 
+		// TODO clean up the exe file and temp directory
 		var output = Path.Combine(tempDirectory.FullName, "testFunc.exe");
 
 		StartProcessAsync(output);
@@ -110,15 +128,13 @@ public partial class MainPageViewModel : ObservableObject
 
 	public ObservableCollection<Node> nodes { get; set; } = new ObservableCollection<Node>()
 	{
-		new Node
-		{
-			Type = NodeType.EmptyNode,
-		},
+		new Node(NodeType.TopLevel),
+		new Node(NodeType.Class),
+		new Node(NodeType.Method),
+		new Node(NodeType.Method),
+		new Node(NodeType.PrintLine),
+		new Node(NodeType.ConstantString),
 
-		new Node
-		{
-			Type = NodeType.HelloWorld,
-		},
 	};
 
 	public class CustomViewCell : ViewCell
@@ -151,6 +167,11 @@ public class NodeTemplateSelector : DataTemplateSelector
 {
 	public DataTemplate HelloWorldNodeTemplate { get; set; }
 	public DataTemplate EmptyNodeTemplate { get; set; }
+	public DataTemplate TopLevelNodeTemplate { get; set; }
+	public DataTemplate ClassNodeTemplate { get; set; }
+	public DataTemplate MethodNodeTemplate { get; set; }
+	public DataTemplate PrintLineNodeTemplate { get; set; }
+	public DataTemplate ConstantStringTemplate { get; set; }
 
 	protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
 	{
@@ -161,6 +182,16 @@ public class NodeTemplateSelector : DataTemplateSelector
 				return EmptyNodeTemplate;
 			case NodeType.HelloWorld:
 				return HelloWorldNodeTemplate;
+			case NodeType.TopLevel:
+				return TopLevelNodeTemplate;
+			case NodeType.Class:
+				return ClassNodeTemplate;
+			case NodeType.Method:
+				return MethodNodeTemplate;
+			case NodeType.PrintLine:
+				return PrintLineNodeTemplate;
+			case NodeType.ConstantString:
+				return ConstantStringTemplate;
 			default:
 				throw new Exception($"Template Selector did not find Node type {node.Type}");
 		}
@@ -170,12 +201,26 @@ public class NodeTemplateSelector : DataTemplateSelector
 public class Node
 {
 	public string Name { get; set; }
-	public string PrintString { get; set; }
+	public string NameSpace { get; set; }
+	public string TypeName { get; set; }
+	public string MethodName { get; set; }
+	public string Value { get; set; }
+	public string PrintString { get; set; } = "Hello World!";
 	public NodeType Type { get; set; }
+
+	public Node(NodeType type)
+	{
+		Type = type;
+	}
 }
 
 public enum NodeType
 {
 	EmptyNode,
 	HelloWorld,
+	TopLevel,
+	Class,
+	Method,
+	PrintLine,
+	ConstantString,
 }

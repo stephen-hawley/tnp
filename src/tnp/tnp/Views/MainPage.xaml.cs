@@ -11,9 +11,5 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = vm;
-
-		//nodeListView.ItemsSource = vm.nodes;
-		//nodeListView.ItemsSource = MainPageViewModel.nodes;
-		//nodeListView.ItemTemplate = new DataTemplate(typeof(MainPageViewModel.CustomViewCell));
 	}
 }

@@ -8,26 +8,179 @@
 	<ContentPage.Resources>
 		<DataTemplate x:Key="HelloWorldNodeTemplate">
 			<ViewCell>
-				<Border BackgroundColor="LightBlue" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
-					<Grid>
+				<Border BackgroundColor="#8AAA90" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
-							<RowDefinition Height="9*" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="9*" />
+							<ColumnDefinition Width="*" />
 							<ColumnDefinition Width="40" />
 						</Grid.ColumnDefinitions>
 
-						<Entry Text="{Binding Name}" TextColor="White" FontSize="30" />
+						<Entry Text="HelloWorldNode" IsEnabled="False" TextColor="White" FontSize="30" />
 
-						<StackLayout Grid.Row="1" Spacing="10">
+						<HorizontalStackLayout Grid.Row="1" Spacing="10">
 							<Label Text="Print: " TextColor="White" FontSize="30" />
-							<Entry Text="{Binding PrintString}" TextColor="White" FontSize="30" />
-						</StackLayout>
+							<Entry Text="{Binding PrintString}" Placeholder="PrintString" TextColor="White" FontSize="30" />
+						</HorizontalStackLayout>
 
-						<!--<ImageButton Grid.Column="1" Source="close.png" Margin="5" Command="{Binding Source={x:Reference MainPageViewModel}, Path=RemoveNodeCommand}" />-->
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
+					</Grid>
+					
+				</Border>
+			</ViewCell>
+		</DataTemplate>
 
+		<DataTemplate x:Key="TopLevelNodeTemplate">
+			<ViewCell>
+				<Border BackgroundColor="#8AAA90" Margin="10" Padding="10" HeightRequest="200" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="TopLevelNode" IsEnabled="False" TextColor="White" FontSize="30" />
+
+						<HorizontalStackLayout Grid.Row="1" Spacing="10">
+							<Label Text="Print: " TextColor="White" FontSize="30" />
+							<Entry Text="{Binding NameSpace}" Placeholder="NameSpace" TextColor="White" FontSize="30" />
+						</HorizontalStackLayout>
+
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
+					</Grid>
+					<FlyoutBase.ContextFlyout>
+       <MenuFlyout>
+           <MenuFlyoutSubItem Text="Add">
+               <MenuFlyoutItem Text="Class"
+                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=AddClassNodeCommand}"
+                               CommandParameter="{Binding .}" />
+           </MenuFlyoutSubItem>
+       </MenuFlyout>
+   </FlyoutBase.ContextFlyout>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ClassNodeTemplate">
+			<ViewCell>
+				<Border BackgroundColor="#ccdce2" Margin="10" Padding="10"
+					HeightRequest="200" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="ClassNode" IsEnabled="False" TextColor="White" FontSize="30" />
+
+						<HorizontalStackLayout Grid.Row="1" Spacing="10">
+							<Label Text="Print: " TextColor="White" FontSize="30" />
+							<Entry Text="{Binding TypeName}" Placeholder="TypeName"  TextColor="White" FontSize="30" />
+						</HorizontalStackLayout>
+
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
+					</Grid>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+
+		<DataTemplate x:Key="MethodNodeTemplate">
+			<ViewCell>
+				<Border  HeightRequest="200"  BackgroundColor="#338455" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="MethodNode" IsEnabled="False" TextColor="White" FontSize="30" />
+
+						<HorizontalStackLayout Grid.Row="1" Spacing="10">
+							<Label Text="Print: " TextColor="White" FontSize="30" />
+							<Entry Text="{Binding MethodName}" Placeholder="MethodName"  TextColor="White" FontSize="30" />
+						</HorizontalStackLayout>
+
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
+					</Grid>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+
+		<DataTemplate x:Key="PrintLineNodeTemplate">
+			<ViewCell>
+				<Border  HeightRequest="100"  BackgroundColor="#dbdeef" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="PrintLineNode" IsEnabled="False" TextColor="White" FontSize="30" />
+
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
+					</Grid>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ConstantStringTemplate">
+			<ViewCell>
+				<Border  HeightRequest="200"  BackgroundColor="#38675d" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid RowSpacing="30">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="40" />
+							<RowDefinition Height="7*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="ConstantString" IsEnabled="False" TextColor="White" FontSize="30" />
+
+						<HorizontalStackLayout Grid.Row="1" Spacing="10">
+							<Label Text="Print: " TextColor="White" FontSize="30" />
+							<Entry Text="{Binding Value}" Placeholder="Value"  TextColor="White" FontSize="30" />
+						</HorizontalStackLayout>
+
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
 					</Grid>
 				</Border>
 			</ViewCell>
@@ -47,11 +200,11 @@
 						</Grid.ColumnDefinitions>
 
 
-						<StackLayout x:Name="layout">
-							<Entry Text="{Binding Name}" TextColor="White" FontSize="30"/>
-						</StackLayout>
+						<Entry Text="EmptyNode" IsEnabled="False" TextColor="White" FontSize="30"/>
 
-						<!--<ImageButton Grid.Column="1" Source="close.png" Margin="5" Command="{Binding Source={x:Reference MainPageViewModel}, Path=RemoveNodeCommand}" />-->
+						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
+							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
+							CommandParameter="{Binding .}"/>
 
 					</Grid>
 				</Border>
@@ -59,11 +212,16 @@
 		</DataTemplate>
 		<viewModels:NodeTemplateSelector x:Key="nodeTemplateSelector"
                                           HelloWorldNodeTemplate="{StaticResource HelloWorldNodeTemplate}"
-                                          EmptyNodeTemplate="{StaticResource EmptyNodeTemplate}" />
+                                          EmptyNodeTemplate="{StaticResource EmptyNodeTemplate}"
+								   TopLevelNodeTemplate="{StaticResource TopLevelNodeTemplate}"
+                                          ClassNodeTemplate="{StaticResource ClassNodeTemplate}"
+								   MethodNodeTemplate="{StaticResource MethodNodeTemplate}"
+                                          PrintLineNodeTemplate="{StaticResource PrintLineNodeTemplate}"
+								   ConstantStringTemplate="{StaticResource ConstantStringTemplate}"/>
 	</ContentPage.Resources>
 
 
-	<ScrollView>
+	
 		<Grid ColumnDefinitions="8*, *, 2*" RowDefinitions="*, *" ColumnSpacing="10" RowSpacing="10">
 
 			<ScrollView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="lightgray">
@@ -74,9 +232,9 @@
 
 				</CollectionView>-->
 
-				<ListView x:Name="nodeListView" RowHeight="300" SelectionMode="None" SeparatorVisibility="None"
+				<ListView x:Name="nodeListView" SelectionMode="None" SeparatorVisibility="None"
 					ItemsSource="{Binding nodes}" ItemTemplate="{StaticResource nodeTemplateSelector}"
-			  >
+					HasUnevenRows="True">
 
 				</ListView>
 
@@ -88,17 +246,16 @@
                         Source="add.png" VerticalOptions="Start" Margin="0, 30, 0, 0"
                          Command="{Binding AddNodeCommand}"/>
 
-			<Button Grid.Row="0" Grid.Column="2" Text="Run" BackgroundColor="green" HeightRequest="200"
+			<Button Grid.Row="0" Grid.Column="2" Text="Run" BackgroundColor="#6ec259" HeightRequest="200"
 					WidthRequest="300" FontSize="Large" Command="{Binding RunPressedCommand}"/>
 
-			<Grid Grid.Column="2" Grid.Row="2" RowDefinitions="*, 9*" Background="lightpink">
+			<Grid Grid.Column="2" Grid.Row="2" RowDefinitions="*, 9*" Background="#ebf0f8">
 				<Label Grid.Row="0" Text="Output" FontSize="Large" HorizontalOptions="Center" TextDecorations="Underline"/>
 				<Label Grid.Row="1" LineBreakMode="WordWrap" />
 
 			</Grid>
-
 		</Grid>
-	</ScrollView>
+			
 
 </ContentPage>
 
