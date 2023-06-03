@@ -10,6 +10,8 @@ using Xamarin.Utils;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Reflection.PortableExecutable;
+using Mono.Cecil.Cil;
+using System.Threading.Channels;
 
 namespace tnp.ViewModels;
 
@@ -18,11 +20,11 @@ public partial class MainPageViewModel : ObservableObject
 	public MainPageViewModel()
 	{
 	}
-
 	[RelayCommand]
 	void AddNode()
 	{
-		nodes.Add(new Node(NodeType.HelloWorld));
+		nodes.Add(new Node(NodeType.TopLevel));
+		//await Application.Current.MainPage.DisplayActionSheet("Node 1", "Node 2", "Node 3", "Node 4");
 	}
 
 	[RelayCommand]
@@ -32,6 +34,76 @@ public partial class MainPageViewModel : ObservableObject
 		{
 			var index = nodes.IndexOf(node);
 			nodes.Insert(index + 1, new Node(NodeType.Class));
+		}
+	}
+
+	// TODO await Application.Current.MainPage.DisplayActionSheet() is not the most MVVM way to do it
+
+	[RelayCommand]
+	async Task AddTopLevelChild(object sender)
+	{
+		if (sender is Node node)
+		{
+			var requestedNode = await Application.Current.MainPage.DisplayActionSheet("Add Child Node", null, null,
+				"ClassNode", "OtherNode"
+			);
+
+			if (requestedNode == "ClassNode")
+			{
+				var index = nodes.IndexOf(node);
+				nodes.Insert(index + 1, new Node(NodeType.Class));
+			}
+		}
+	}
+
+	[RelayCommand]
+	async Task AddClassChild(object sender)
+	{
+		if (sender is Node node)
+		{
+			var requestedNode = await Application.Current.MainPage.DisplayActionSheet("Add Child Node", null, null,
+				"MethodNode", "OtherNode"
+			);
+
+			if (requestedNode == "MethodNode")
+			{
+				var index = nodes.IndexOf(node);
+				nodes.Insert(index + 1, new Node(NodeType.Method));
+			}
+		}
+	}
+
+	[RelayCommand]
+	async Task AddPrintChild(object sender)
+	{
+		if (sender is Node node)
+		{
+			var requestedNode = await Application.Current.MainPage.DisplayActionSheet("Add Child Node", null, null,
+				"ConstantString", "OtherNode"
+			);
+
+			if (requestedNode == "ConstantString")
+			{
+				var index = nodes.IndexOf(node);
+				nodes.Insert(index + 1, new Node(NodeType.ConstantString));
+			}
+		}
+	}
+
+	[RelayCommand]
+	async Task AddMethodChild(object sender)
+	{
+		if (sender is Node node)
+		{
+			var requestedNode = await Application.Current.MainPage.DisplayActionSheet("Add Child Node", null, null,
+				"PrintLineNode", "OtherNode"
+			);
+
+			if (requestedNode == "PrintLineNode")
+			{
+				var index = nodes.IndexOf(node);
+				nodes.Insert(index + 1, new Node(NodeType.PrintLine));
+			}
 		}
 	}
 
@@ -60,6 +132,8 @@ public partial class MainPageViewModel : ObservableObject
 
 	async Task CompileNodes(DirectoryInfo path)
 	{
+		// TODO Link up our current Nodes instead of hardcoded
+
 		//var helloNode = new HelloWorldNode();
 
 		// all this is for making the root node

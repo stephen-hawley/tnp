@@ -43,7 +43,8 @@
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
 							<RowDefinition Height="40" />
-							<RowDefinition Height="7*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="40" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
@@ -60,8 +61,12 @@
 						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
 							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
 							CommandParameter="{Binding .}"/>
+
+						<ImageButton Grid.Column="1" Grid.Row="3"
+							Source="add.png" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=AddTopLevelChildCommand}"
+							CommandParameter="{Binding .}"/>
 					</Grid>
-					<FlyoutBase.ContextFlyout>
+					<!--<FlyoutBase.ContextFlyout>
        <MenuFlyout>
            <MenuFlyoutSubItem Text="Add">
                <MenuFlyoutItem Text="Class"
@@ -69,20 +74,21 @@
                                CommandParameter="{Binding .}" />
            </MenuFlyoutSubItem>
        </MenuFlyout>
-   </FlyoutBase.ContextFlyout>
+   </FlyoutBase.ContextFlyout>-->
 				</Border>
 			</ViewCell>
 		</DataTemplate>
 
 		<DataTemplate x:Key="ClassNodeTemplate">
 			<ViewCell>
-				<Border BackgroundColor="#ccdce2" Margin="10" Padding="10"
+				<Border BackgroundColor="#ccdce2" Margin="40,10,10,10" Padding="10"
 					HeightRequest="200" WidthRequest="600" HorizontalOptions="Start">
 					<Grid RowSpacing="30">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
 							<RowDefinition Height="40" />
-							<RowDefinition Height="7*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="40" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
@@ -99,6 +105,10 @@
 						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
 							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
 							CommandParameter="{Binding .}"/>
+
+						<ImageButton Grid.Column="1" Grid.Row="3"
+							Source="add.png" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=AddClassChildCommand}"
+							CommandParameter="{Binding .}"/>
 					</Grid>
 				</Border>
 			</ViewCell>
@@ -106,12 +116,13 @@
 
 		<DataTemplate x:Key="MethodNodeTemplate">
 			<ViewCell>
-				<Border  HeightRequest="200"  BackgroundColor="#338455" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+				<Border  HeightRequest="200"  BackgroundColor="#338455" Margin="120,10,10,10" Padding="80,10,10,10" WidthRequest="600" HorizontalOptions="Start">
 					<Grid RowSpacing="30">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
 							<RowDefinition Height="40" />
-							<RowDefinition Height="7*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="40" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
@@ -128,6 +139,10 @@
 						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
 							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
 							CommandParameter="{Binding .}"/>
+
+						<ImageButton Grid.Column="1" Grid.Row="3"
+							Source="add.png" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=AddMethodChildCommand}"
+							CommandParameter="{Binding .}"/>
 					</Grid>
 				</Border>
 			</ViewCell>
@@ -135,12 +150,13 @@
 
 		<DataTemplate x:Key="PrintLineNodeTemplate">
 			<ViewCell>
-				<Border  HeightRequest="100"  BackgroundColor="#dbdeef" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+				<Border  HeightRequest="100"  BackgroundColor="#dbdeef" Margin="160,10,10,10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
 					<Grid RowSpacing="30">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
 							<RowDefinition Height="40" />
-							<RowDefinition Height="7*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="40" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" />
@@ -152,6 +168,10 @@
 						<ImageButton Grid.Column="1" Source="close.png" Margin="5"
 							Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=RemoveNodeCommand}"
 							CommandParameter="{Binding .}"/>
+
+						<ImageButton Grid.Column="1" Grid.Row="3"
+							Source="add.png" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=AddPrintChildCommand}"
+							CommandParameter="{Binding .}"/>
 					</Grid>
 				</Border>
 			</ViewCell>
@@ -159,7 +179,7 @@
 
 		<DataTemplate x:Key="ConstantStringTemplate">
 			<ViewCell>
-				<Border  HeightRequest="200"  BackgroundColor="#38675d" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+				<Border  HeightRequest="200"  BackgroundColor="#38675d" Margin="200,10,10,10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
 					<Grid RowSpacing="30">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="40" />
