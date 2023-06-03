@@ -47,6 +47,12 @@ var endTime = System.Environment.TickCount;
 var output = Path.Combine (tempDirectory.FullName, "testFunc.exe");
 var task = Xamarin.Utils.Execution.RunAsync ("mono", new List<string> () { output }, null, null, null, null, null, null, null);
 task.Wait ();
+
+var x = System.Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+var x1 = System.Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine);
+var x2 = System.Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User);
+
+
 if (task.Result.ExitCode == 0) {
 	var t = task.Result.StandardOutput?.ToString() ?? "no output";
 	Console.WriteLine (task.Result.StandardOutput?.ToString () ?? "no output");

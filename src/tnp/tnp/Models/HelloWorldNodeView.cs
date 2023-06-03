@@ -71,7 +71,7 @@ namespace tnp.Models
 				Source = "close.png",
 				Command = new Command(() =>
 				{
-					MainPageViewModel.nodes.Remove(node);
+					//MainPageViewModel.nodes.Remove(node);
 				}),
 			};
 

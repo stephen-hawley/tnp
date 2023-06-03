@@ -1,15 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:viewModels="clr-namespace:tnp.ViewModels"
+			 x:DataType="viewModels:MainPageViewModel"
              x:Class="tnp.Views.MainPage">
+
+	<ContentPage.Resources>
+		<DataTemplate x:Key="HelloWorldNodeTemplate">
+			<ViewCell>
+				<Border BackgroundColor="LightBlue" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="9*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="9*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+						<Entry Text="{Binding Name}" TextColor="White" FontSize="30" />
+
+						<StackLayout Grid.Row="1" Spacing="10">
+							<Label Text="Print: " TextColor="White" FontSize="30" />
+							<Entry Text="{Binding PrintString}" TextColor="White" FontSize="30" />
+						</StackLayout>
+
+						<!--<ImageButton Grid.Column="1" Source="close.png" Margin="5" Command="{Binding Source={x:Reference MainPageViewModel}, Path=RemoveNodeCommand}" />-->
+
+					</Grid>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+
+		<DataTemplate x:Key="EmptyNodeTemplate">
+			<ViewCell>
+				<Border BackgroundColor="LightGreen" Margin="10" Padding="10" WidthRequest="600" HorizontalOptions="Start">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40" />
+							<RowDefinition Height="9*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="9*" />
+							<ColumnDefinition Width="40" />
+						</Grid.ColumnDefinitions>
+
+
+						<StackLayout x:Name="layout">
+							<Entry Text="{Binding Name}" TextColor="White" FontSize="30"/>
+						</StackLayout>
+
+						<!--<ImageButton Grid.Column="1" Source="close.png" Margin="5" Command="{Binding Source={x:Reference MainPageViewModel}, Path=RemoveNodeCommand}" />-->
+
+					</Grid>
+				</Border>
+			</ViewCell>
+		</DataTemplate>
+		<viewModels:NodeTemplateSelector x:Key="nodeTemplateSelector"
+                                          HelloWorldNodeTemplate="{StaticResource HelloWorldNodeTemplate}"
+                                          EmptyNodeTemplate="{StaticResource EmptyNodeTemplate}" />
+	</ContentPage.Resources>
+
 
 	<ScrollView>
 		<Grid ColumnDefinitions="8*, *, 2*" RowDefinitions="*, *" ColumnSpacing="10" RowSpacing="10">
 
 			<ScrollView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="lightgray">
 
-				<ListView x:Name="nodeListView" RowHeight="300" SelectionMode="None" SeparatorVisibility="None">
+				<!--<CollectionView Background="yellow" x:Name="nodeListView" SelectionMode="None"
+					ItemsSource="{Binding nodes}" ItemTemplate="{StaticResource nodeTemplateSelector}"
+			  >
+
+				</CollectionView>-->
+
+				<ListView x:Name="nodeListView" RowHeight="300" SelectionMode="None" SeparatorVisibility="None"
+					ItemsSource="{Binding nodes}" ItemTemplate="{StaticResource nodeTemplateSelector}"
+			  >
+
 				</ListView>
+
+
+
 			</ScrollView>
 
 			<ImageButton Grid.Row="0" Grid.Column="1" HeightRequest="120" WidthRequest="120"
