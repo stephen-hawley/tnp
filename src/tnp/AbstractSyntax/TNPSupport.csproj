@@ -16,4 +16,10 @@
     <Folder Include="CodeGeneration\" />
     <Folder Include="Semantics\" />
   </ItemGroup>
+  <Target Name="GeneratedCSParser" BeforeTargets="CoreCompile" Inputs="$(MSBuildProjectFullPath)" Outputs="GeneratedParser\TnpExpressionsBaseListener.cs;GeneratedParser\TnpExpressionsLexer.cs;GeneratedParser\TnpExpressionsListener.cs;GeneratedParser\TnpExpressionsParser.cs">
+    <Exec Command="make" WorkingDirectory="../../parser" />
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.0" />
+  </ItemGroup>
 </Project>
