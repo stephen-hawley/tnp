@@ -17,8 +17,8 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<Views.MainPage>();
 		builder.Services.AddSingleton<ViewModels.MainPageViewModel>();
-		builder.Services.AddTransient<Models.EmptyNodeView>();
-		builder.Services.AddTransient<Models.HelloWorldNodeView>();
+		builder.Services.AddTransient<Models.Node>();
+		builder.Services.AddSingleton<NodeTemplateSelector>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

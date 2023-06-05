@@ -114,68 +114,151 @@ public partial class MainPageViewModel : ObservableObject
 			nodes.Remove(node);
 	}
 
+	[ObservableProperty]
+	string output;
+
 	[RelayCommand]
 	async Task RunPressed()
 	{
-
 		var tempDirectory = Directory.CreateTempSubdirectory();
-		Directory.CreateDirectory(tempDirectory.FullName);
+		var tempDirFullName = tempDirectory.FullName;
 
 		await CompileNodes(tempDirectory);
 
-		// TODO clean up the exe file and temp directory
-		var output = Path.Combine(tempDirectory.FullName, "testFunc.exe");
+		var output = Path.Combine(tempDirFullName, "testFunc.exe");
 
 		StartProcessAsync(output);
 
+		if (File.Exists(output))
+			File.Delete(output);
+
+		if (Directory.Exists(tempDirFullName))
+			Directory.Delete(tempDirFullName);
+
+		// clean up the TNPTypeFactory Cache between compiles
+		TNPTypeFactory.ResetCache();
 	}
 
 	async Task CompileNodes(DirectoryInfo path)
 	{
-		// TODO Link up our current Nodes instead of hardcoded
-
-		//var helloNode = new HelloWorldNode();
-
-		// all this is for making the root node
-		var helloNode = new TopLevelNode() { NameSpace = "NoName" };
-		var fooClass = new ClassNode() { TypeName = "Foo" };
-		helloNode.TypeNodes.Add(fooClass);
-		fooClass.Parent = helloNode;
-
-		// default ctor
-		var ctor = new MethodNode() { MethodName = ".ctor" };
-		fooClass.Methods.Add(ctor);
-		ctor.Parent = fooClass;
-
-		// main method
-		var main = new MethodNode() { MethodName = "Main" };
-		fooClass.Methods.Add(main);
-		main.Parent = fooClass;
-
-		// this is the printer
-		var strNode = new ConstantString("Hello, world!");
-		var printer = new PrintLineNode() { Value = strNode };
-		strNode.Parent = printer;
-		main.Statements.Add(printer);
-		printer.Parent = main;
-
-		var entry = helloNode.MethodsByName("NoName.Foo", "Main").FirstOrDefault();
-		if (entry is not null)
-			helloNode.EntryPoint = entry;
-
+		var preparedNodes = PrepareNodes();
 
 		var generators = new CodeGeneratorsIL();
 
-		generators.Begin("testFunc", path.FullName);
-
-		// TODO go through the nodes and convert to TNP.Nodes and run the generator on them
-
-		if (generators.TryGetGenerator(helloNode, out var codeGenerator))
+		try
 		{
-			await codeGenerator.Generate(generators, helloNode);
+			generators.Begin("testFunc", path.FullName);
+
+			foreach (var node in preparedNodes)
+			{
+				if (generators.TryGetGenerator(node, out var codeGenerator))
+				{
+					await codeGenerator.Generate(generators, node);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"Error while compiling: {e}");
+		}
+		finally
+		{
+			generators.End();
+		}
+	}
+
+	List<IASTNode> PrepareNodes()
+	{
+		List<IASTNode> TopLevelNodes = new List<IASTNode>();
+
+		TopLevelNode currentTopLevelNode = null;
+		ClassNode currentClassNode = null;
+		MethodNode currentMethodNode = null;
+
+		List<TopLevelNode> entryTopLevelNodes = new List<TopLevelNode>();
+		List<ClassNode> entryClassNodes = new List<ClassNode>();
+		List<MethodNode> entryMethodNodes = new List<MethodNode>();
+
+		IASTNode savedPreviousNode = null;
+
+		foreach (var node in nodes)
+		{
+
+			if (node.Type == NodeType.TopLevel)
+			{
+				// add the old TopLevelNode to the list
+				if (currentTopLevelNode is TopLevelNode tln)
+				{
+					TopLevelNodes.Add(tln);
+				}
+
+				currentTopLevelNode = new TopLevelNode()
+				{
+					NameSpace = node.NameSpace,
+				};
+			}
+
+			else if (node.Type == NodeType.Class)
+			{
+				currentClassNode = new ClassNode();
+
+				// Note: we must set Parent before setting TypeName
+				currentClassNode.Parent = currentTopLevelNode;
+				currentTopLevelNode.TypeNodes.Add(currentClassNode);
+				currentClassNode.TypeName = node.TypeName;
+
+			}
+
+			else if (node.Type == NodeType.Method)
+			{
+				currentMethodNode = new MethodNode
+				{
+					MethodName = node.MethodName,
+				};
+
+				currentClassNode.Methods.Add(currentMethodNode);
+				currentMethodNode.Parent = currentClassNode;
+
+				if (node.IsEntryPoint)
+				{
+					entryTopLevelNodes.Add(currentTopLevelNode);
+					entryClassNodes.Add(currentClassNode);
+					entryMethodNodes.Add(currentMethodNode);
+				}
+			}
+
+			else if (node.Type == NodeType.PrintLine)
+			{
+				var printLineNode = new PrintLineNode();
+				currentMethodNode.Statements.Add(printLineNode);
+				printLineNode.Parent = currentMethodNode;
+				savedPreviousNode = printLineNode;
+			}
+
+			else if (node.Type == NodeType.ConstantString)
+			{
+				var constantString = new ConstantString(node.Value);
+				if (savedPreviousNode is PrintLineNode pln)
+				{
+					pln.Value = constantString;
+					constantString.Parent = pln;
+					savedPreviousNode = null;
+				}
+			}
 		}
 
-		generators.End();
+		for (int i = 0; i < entryTopLevelNodes.Count; i++)
+		{
+			var entryTopLevel = entryTopLevelNodes[i];
+			var entry = entryTopLevel.MethodsByName($"{entryTopLevel.NameSpace}.{entryClassNodes[i].TypeName}", entryMethodNodes[i].MethodName).FirstOrDefault();
+			if (entry is not null)
+				entryTopLevel.EntryPoint = entry;
+		}
+
+		if (!TopLevelNodes.Contains(currentTopLevelNode))
+			TopLevelNodes.Add(currentTopLevelNode);
+
+		return TopLevelNodes;
 	}
 
 	void StartProcessAsync(string path)
@@ -183,16 +266,22 @@ public partial class MainPageViewModel : ObservableObject
 		try
 		{
 			// TODO not need to hardcode path to mono
-			var psi = new ProcessStartInfo { FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono",
-				Arguments = path, UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true};
+			var psi = new ProcessStartInfo
+			{
+				FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono",
+				Arguments = path,
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				CreateNoWindow = true
+			};
+
 			// TODO see which environment variables are causing the issue
 			psi.EnvironmentVariables.Clear();
 			var process = Process.Start(psi);
-
-			var o = process.StandardOutput;
-			var text = o.ReadToEnd();
-
-			o.Close();
+			var stream = process.StandardOutput;
+			var text = stream.ReadToEnd();
+			stream.Close();
+			Output = string.IsNullOrEmpty(text) ? "No Output" : text;
 		}
 		catch (Exception ex)
 		{
@@ -202,99 +291,28 @@ public partial class MainPageViewModel : ObservableObject
 
 	public ObservableCollection<Node> nodes { get; set; } = new ObservableCollection<Node>()
 	{
-		new Node(NodeType.TopLevel),
-		new Node(NodeType.Class),
-		new Node(NodeType.Method),
-		new Node(NodeType.Method),
+		new Node(NodeType.TopLevel)
+		{
+			NameSpace = "NameSpace1",
+		},
+		new Node(NodeType.Class)
+		{
+			TypeName = "Class1",
+		},
+		new Node(NodeType.Method)
+		{
+			MethodName = ".ctor",
+		},
+		new Node(NodeType.Method)
+		{
+			MethodName = "Main",
+			IsEntryPoint = true,
+		},
 		new Node(NodeType.PrintLine),
-		new Node(NodeType.ConstantString),
+		new Node(NodeType.ConstantString)
+		{
+			Value = "Hello World!",
+		},
 
 	};
-
-	public class CustomViewCell : ViewCell
-	{
-		protected override void OnBindingContextChanged()
-		{
-			base.OnBindingContextChanged();
-
-			var node = (Node)BindingContext;
-
-			View = GetCustomView(node);
-		}
-
-		private View GetCustomView(Node node)
-		{
-			switch (node.Type)
-			{
-				case NodeType.EmptyNode:
-					return new EmptyNodeView(node);
-				case NodeType.HelloWorld:
-					return new HelloWorldNodeView(node);
-				default:
-					return new EmptyNodeView(node);
-			}
-		}
-	}
-}
-
-public class NodeTemplateSelector : DataTemplateSelector
-{
-	public DataTemplate HelloWorldNodeTemplate { get; set; }
-	public DataTemplate EmptyNodeTemplate { get; set; }
-	public DataTemplate TopLevelNodeTemplate { get; set; }
-	public DataTemplate ClassNodeTemplate { get; set; }
-	public DataTemplate MethodNodeTemplate { get; set; }
-	public DataTemplate PrintLineNodeTemplate { get; set; }
-	public DataTemplate ConstantStringTemplate { get; set; }
-
-	protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-	{
-		var node = (Node)item;
-		switch (node.Type)
-		{
-			case NodeType.EmptyNode:
-				return EmptyNodeTemplate;
-			case NodeType.HelloWorld:
-				return HelloWorldNodeTemplate;
-			case NodeType.TopLevel:
-				return TopLevelNodeTemplate;
-			case NodeType.Class:
-				return ClassNodeTemplate;
-			case NodeType.Method:
-				return MethodNodeTemplate;
-			case NodeType.PrintLine:
-				return PrintLineNodeTemplate;
-			case NodeType.ConstantString:
-				return ConstantStringTemplate;
-			default:
-				throw new Exception($"Template Selector did not find Node type {node.Type}");
-		}
-	}
-}
-
-public class Node
-{
-	public string Name { get; set; }
-	public string NameSpace { get; set; }
-	public string TypeName { get; set; }
-	public string MethodName { get; set; }
-	public string Value { get; set; }
-	public string PrintString { get; set; } = "Hello World!";
-	public NodeType Type { get; set; }
-
-	public Node(NodeType type)
-	{
-		Type = type;
-	}
-}
-
-public enum NodeType
-{
-	EmptyNode,
-	HelloWorld,
-	TopLevel,
-	Class,
-	Method,
-	PrintLine,
-	ConstantString,
 }
