@@ -11,9 +11,13 @@ var helloNode = new TopLevelNode () { NameSpace = "NoName" };
 var fooClass = new ClassNode () { TypeName = "Foo" };
 helloNode.TypeNodes.Add (fooClass);
 fooClass.Parent = helloNode;
+
+// default ctor
 var ctor = new MethodNode () { MethodName = ".ctor" };
 fooClass.Methods.Add (ctor);
 ctor.Parent = fooClass;
+
+// main method
 var main = new MethodNode () { MethodName = "Main" };
 fooClass.Methods.Add (main);
 main.Parent = fooClass;
