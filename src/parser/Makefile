@@ -1,4 +1,4 @@
-ANTLRJAR=antlr/antlr-4.9.1-complete.jar
+ANTLRJAR=antlr/antlr-4.13.0-complete.jar
 ANTLR=java -jar $(ANTLRJAR)
 CLASSPATH=.:$(ANTLRJAR)
 
