@@ -100,3 +100,4 @@ namespace TNPSupport.AbstractSyntax
 			: base (value) { }
 	}
 }
+

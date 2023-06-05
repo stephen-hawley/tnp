@@ -24,7 +24,6 @@ public partial class MainPageViewModel : ObservableObject
 	void AddNode()
 	{
 		nodes.Add(new Node(NodeType.TopLevel));
-		//await Application.Current.MainPage.DisplayActionSheet("Node 1", "Node 2", "Node 3", "Node 4");
 	}
 
 	[RelayCommand]
@@ -125,12 +124,13 @@ public partial class MainPageViewModel : ObservableObject
 
 		await CompileNodes(tempDirectory);
 
-		var output = Path.Combine(tempDirFullName, "testFunc.exe");
+		var exePath = Path.Combine(tempDirFullName, "testFunc.exe");
 
-		StartProcessAsync(output);
+		// TODO not need to hardcode path to mono
+		Output = StartProcess("/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono", exePath);
 
-		if (File.Exists(output))
-			File.Delete(output);
+		if (File.Exists(exePath))
+			File.Delete(exePath);
 
 		if (Directory.Exists(tempDirFullName))
 			Directory.Delete(tempDirFullName);
@@ -261,14 +261,14 @@ public partial class MainPageViewModel : ObservableObject
 		return TopLevelNodes;
 	}
 
-	void StartProcessAsync(string path)
+	string StartProcess(string filename, string path)
 	{
+		var output = string.Empty;
 		try
 		{
-			// TODO not need to hardcode path to mono
 			var psi = new ProcessStartInfo
 			{
-				FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono",
+				FileName = filename,
 				Arguments = path,
 				UseShellExecute = false,
 				RedirectStandardOutput = true,
@@ -281,12 +281,14 @@ public partial class MainPageViewModel : ObservableObject
 			var stream = process.StandardOutput;
 			var text = stream.ReadToEnd();
 			stream.Close();
-			Output = string.IsNullOrEmpty(text) ? "No Output" : text;
+			output = string.IsNullOrEmpty(text) ? "No Output" : text;
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine($"Error {ex.Message}");
 		}
+
+		return output;
 	}
 
 	public ObservableCollection<Node> nodes { get; set; } = new ObservableCollection<Node>()
