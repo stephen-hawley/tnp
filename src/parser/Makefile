@@ -27,7 +27,7 @@ grammar: $(GRAMMAR) $(JAVAOUTDIR)
 	javac -classpath $(CLASSPATH) $(JAVAOUTDIR)/*.java
 
 cs: grammar $(CSOUTDIR) $(CSFINALOUTPUT)
-	$(ANTLR) -Dlanguage=CSharp -o $(CSOUTDIR) $(GRAMMAR)
+	$(ANTLR) -package TNPSupport.GeneratedParser -Dlanguage=CSharp -o $(CSOUTDIR) $(GRAMMAR)
 	cp $(CSOUTDIR)/*.cs $(CSFINALOUTPUT)
 
 $(JAVAOUTDIR):

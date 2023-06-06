@@ -80,6 +80,9 @@ namespace TNPSupport.AbstractSyntax
 
 		[NotNull]
 		public static TNPType Object => cache ["System.Object"];
+
+		[NotNull]
+		public static TNPType NoType => new TNPType (".none.", ".none.");
 	}
 }
 

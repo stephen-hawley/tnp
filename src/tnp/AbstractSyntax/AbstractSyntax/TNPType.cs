@@ -18,6 +18,7 @@ namespace TNPSupport.AbstractSyntax
 		public string FullName => $"{NameSpace}.{Name}";
 		public override string ToString () => HasAlias ? Alias : FullName;
 		public bool IsValueType { get; set; }
+		public bool IsNoType { get { return this == TNPTypeFactory.NoType; } }
 	}
 }
 
