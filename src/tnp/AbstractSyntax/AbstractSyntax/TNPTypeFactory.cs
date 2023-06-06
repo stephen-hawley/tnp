@@ -21,6 +21,24 @@ namespace TNPSupport.AbstractSyntax
 			{ "System.Object", new TNPType ("System", "Object", "object") },
 		};
 
+		public static void ResetCache()
+		{
+			cache = new Dictionary<string, TNPType>() {
+				{ "System.Void", new TNPType("System", "Void", "void", true) },
+				{ "System.String", new TNPType("System", "String", "string", false) },
+				{ "System.Boolean", new TNPType("System", "Boolean", "bool", true) },
+				{ "System.SByte", new TNPType("System", "SByte", "sbyte", true) },
+				{ "System.Byte", new TNPType("System", "Byte", "byte", true) },
+				{ "System.Int16", new TNPType("System", "Int16", "short", true) },
+				{ "System.UInt16", new TNPType("System", "UInt16", "ushort", true) },
+				{ "System.Int32", new TNPType("System", "Int32", "int", true) },
+				{ "System.UInt32", new TNPType("System", "UInt32", "uint", true) },
+				{ "System.Int64", new TNPType("System", "Int64", "long", true) },
+				{ "System.UInt64", new TNPType("System", "UInt64", "ulong", true) },
+				{ "System.Object", new TNPType("System", "Object", "object") },
+			};
+		}
+
 		public static TNPType FromType (Type t)
 		{
 			lock (cachelock) {

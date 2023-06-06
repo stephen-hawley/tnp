@@ -1,0 +1,2 @@
+﻿The cancel icon can be attributed here: <a href="https://www.flaticon.com/free-icons/close" title="close icons">Close icons created by Pixel perfect - Flaticon</a>
+The Add icon can be attributed here: <a href="https://www.flaticon.com/free-icons/plus" title="plus icons">Plus icons created by dmitri13 - Flaticon</a>
