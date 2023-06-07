@@ -3,26 +3,26 @@ grammar TnpExpressions ;
 tnp_expression: expr ;
 
 expr:
-	STRING_LITERAL
-	| BOOLEAN_LITERAL
-	| number
-	| qualified_identifier
-	| expr '[' expr ']'
-	| '(' expr ')'
-	| prefix=('+'|'-'|'~'|'!') expr
-	| expr binaryop=('*'|'/'|'%') expr
-	| expr binaryop=('+'|'-') expr
-	| expr ('<' '<' | '>' '>') expr
-	| expr binaryop=('<=' | '>=' | '>' | '<') expr
-	| expr binaryop=('==' | '!=') expr
-	| expr binaryop='&' expr
-	| expr binaryop='^' expr
-	| expr binaryop='|' expr
-	| expr binaryop='&&' expr
-	| expr binaryop='||' expr
-	| <assoc=right> expr binaryop='?' expr ':' expr
-	| expr '(' ')'
-	| expr '(' parameterList ')'
+	STRING_LITERAL # String
+	| BOOLEAN_LITERAL # Boolean
+	| number # Digits
+	| qualified_identifier # QualifiedIdentifier
+	| expr '[' expr ']' # Array
+	| '(' expr ')' # Parens
+	| prefix=('+'|'-'|'~'|'!') expr # Prefix
+	| expr binaryop=('*'|'/'|'%') expr # Mult
+	| expr binaryop=('+'|'-') expr # Add
+	| expr ('<' '<' | '>' '>') expr # Shift
+	| expr binaryop=('<=' | '>=' | '>' | '<') expr # Compare
+	| expr binaryop=('==' | '!=') expr # Equals
+	| expr binaryop='&' expr # BitAnd
+	| expr binaryop='^' expr # Xor
+	| expr binaryop='|' expr # BitOr
+	| expr binaryop='&&' expr # And
+	| expr binaryop='||' expr # Or
+	| <assoc=right> expr binaryop='?' expr ':' expr # Ternary
+	| expr '(' ')' # CallSimple
+	| expr '(' parameterList ')' # CallParams
 	;
 
 parameterList:

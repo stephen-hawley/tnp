@@ -7,21 +7,29 @@ namespace TNPSupport.AbstractSyntax
 		IASTNode Right { get; set; }
 	}
 
+	[NodeIsA (NodeClass.Expression)]
 	public class BinaryNode : IBinaryNode
 	{
-		protected BinaryNode(string name, IASTNode parent, IASTNode left, IASTNode right, TNPType type)
+		public BinaryNode(string name, IASTNode left, IASTNode right, IASTNode? parent = null, TNPType? type = null)
 		{
 			Name = name;
-			Parent = parent;
+			Parent = parent is null ? EmptyNode.Empty : parent;
 			Left = left;
+			Left.Parent = this;
 			Right = right;
-			Type = type;
+			Right.Parent = this;
+			Type = type is null ? TNPTypeFactory.NoType : type;
 		}
 
 		public string Name { get; private set; }
+
+		[NodeWantsA (NodeClass.Expression)]
 		public virtual IASTNode Left { get; set; }
+
+		[NodeWantsA (NodeClass.Expression)]
 		public virtual IASTNode Right { get; set; }
 		public IASTNode Parent { get; set; }
+
 		public TNPType Type { get; set; }
 		public IList<Binding> Bindings => Binding.EmptyReadOnly;
 		public IEnumerable<IASTNode> Children {

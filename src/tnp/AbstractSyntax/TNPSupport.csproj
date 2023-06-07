@@ -10,11 +10,13 @@
     <None Remove="AbstractSyntax\" />
     <None Remove="CodeGeneration\" />
     <None Remove="Semantics\" />
+    <None Remove="Expressions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractSyntax\" />
     <Folder Include="CodeGeneration\" />
     <Folder Include="Semantics\" />
+    <Folder Include="Expressions\" />
   </ItemGroup>
   <Target Name="GeneratedCSParser" BeforeTargets="CoreCompile" Inputs="$(MSBuildProjectFullPath)" Outputs="GeneratedParser\TnpExpressionsBaseListener.cs;GeneratedParser\TnpExpressionsLexer.cs;GeneratedParser\TnpExpressionsListener.cs;GeneratedParser\TnpExpressionsParser.cs">
     <Exec Command="make" WorkingDirectory="../../parser" />

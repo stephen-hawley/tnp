@@ -99,5 +99,17 @@ namespace TNPSupport.AbstractSyntax
 		public ConstantULong (ulong value)
 			: base (value) { }
 	}
+
+	public class ConstantSingle : ConstantNode<float>
+	{
+		public ConstantSingle (float value)
+			: base (value) { }
+	}
+
+	public class ConstantDouble : ConstantNode<double>
+	{
+		public ConstantDouble (double value)
+			: base (value) { }
+	}
 }
 
