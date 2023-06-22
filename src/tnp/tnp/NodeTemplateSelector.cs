@@ -5,8 +5,6 @@ namespace tnp;
 
 public class NodeTemplateSelector : DataTemplateSelector
 {
-	public DataTemplate HelloWorldNodeTemplate { get; set; }
-	public DataTemplate EmptyNodeTemplate { get; set; }
 	public DataTemplate TopLevelNodeTemplate { get; set; }
 	public DataTemplate ClassNodeTemplate { get; set; }
 	public DataTemplate MethodNodeTemplate { get; set; }
@@ -18,10 +16,6 @@ public class NodeTemplateSelector : DataTemplateSelector
 		var node = (Node)item;
 		switch (node.Type)
 		{
-			case NodeType.EmptyNode:
-				return EmptyNodeTemplate;
-			case NodeType.HelloWorld:
-				return HelloWorldNodeTemplate;
 			case NodeType.TopLevel:
 				return TopLevelNodeTemplate;
 			case NodeType.Class:
