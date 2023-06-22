@@ -293,28 +293,28 @@ public partial class MainPageViewModel : ObservableObject
 
 	public ObservableCollection<Node> nodes { get; set; } = new ObservableCollection<Node>()
 	{
-		new Node(NodeType.TopLevel)
-		{
-			NameSpace = "NameSpace1",
-		},
-		new Node(NodeType.Class)
-		{
-			TypeName = "Class1",
-		},
-		new Node(NodeType.Method)
-		{
-			MethodName = ".ctor",
-		},
-		new Node(NodeType.Method)
-		{
-			MethodName = "Main",
-			IsEntryPoint = true,
-		},
-		new Node(NodeType.PrintLine),
-		new Node(NodeType.ConstantString)
-		{
-			Value = "Hello World!",
-		},
+		//new Node(NodeType.TopLevel)
+		//{
+		//	NameSpace = "NameSpace1",
+		//},
+		//new Node(NodeType.Class)
+		//{
+		//	TypeName = "Class1",
+		//},
+		//new Node(NodeType.Method)
+		//{
+		//	MethodName = ".ctor",
+		//},
+		//new Node(NodeType.Method)
+		//{
+		//	MethodName = "Main",
+		//	IsEntryPoint = true,
+		//},
+		//new Node(NodeType.PrintLine),
+		//new Node(NodeType.ConstantString)
+		//{
+		//	Value = "Hello World!",
+		//},
 
 	};
 }
